@@ -9,13 +9,16 @@ function addDesign(s) {
 }
 
 function normalizeDoc(doc, id) {
-  return {
+  var result = {
     _id: id || doc._id,
     _rev: doc._rev,
     views: (doc.views && objmap(doc.views, normalizeView)) || {},
-    updates: (doc.updates && objmap(doc.updates, normalizeUpdate)) || {},
-    validate_doc_update: doc.validate_doc_update || {}
+    updates: (doc.updates && objmap(doc.updates, normalizeUpdate)) || {}
   };
+  if (doc.validate_doc_update) {
+    result.validate_doc_update = doc.validate_doc_update;
+  }
+  return result;
 }
 
 function normalizeUpdate(update) {

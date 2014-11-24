@@ -14,12 +14,12 @@ function normalizeDoc(doc, id) {
     _rev: doc._rev,
     views: (doc.views && objmap(doc.views, normalizeView)) || {},
     updates: (doc.updates && objmap(doc.updates, normalizeUpdate)) || {},
-    validates_doc_update: (doc.validates_doc_update && objmap(doc.validates_doc_update, normalizeValidate)) || {}
+    validate_doc_update: (doc.validate_doc_update && objmap(doc.validate_doc_update, normalizeValidate)) || {}
   };
 }
 
-function normalizeValidate(validates_doc_update) {
-  return validates_doc_update.toString();
+function normalizeValidate(validate_doc_update) {
+  return validate_doc_update.toString();
 }
 
 

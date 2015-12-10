@@ -66,6 +66,10 @@ function normalizeIndex(index) {
     r.index = index.index.toString();
   }
 
+  if (index.analyzer) {
+    r.analyzer = index.analyzer.toString();
+  }
+
   return r;
 }
 
@@ -80,7 +84,7 @@ function viewsEqual(a, b) {
 }
 
 function indexEqual(a, b) {
-  return b && a.index === b.index;
+  return b && a.index === b.index && a.analyzer === b.analyzer;
 }
 
 function indexesEqual(a, b) {

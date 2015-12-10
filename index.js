@@ -13,7 +13,8 @@ function normalizeDoc(doc, id) {
     _id: id || doc._id,
     _rev: doc._rev,
     views: (doc.views && objmap(doc.views, normalizeView)) || {},
-    updates: (doc.updates && objmap(doc.updates, normalizeUpdate)) || {}
+    updates: (doc.updates && objmap(doc.updates, normalizeUpdate)) || {},
+    indexes: (doc.indexes && objmap(doc.indexes, normalizeIndex)) || {}
   };
   if (doc.validate_doc_update) {
     result.validate_doc_update = doc.validate_doc_update;
@@ -47,6 +48,24 @@ function normalizeView(view) {
     r.reduce = view.reduce.toString();
   }
 
+  if (view.index) {
+    r.index = view.index.toString();
+  }
+
+  return r;
+}
+
+function normalizeIndex(index) {
+  var r = {};
+
+  if (typeof index === 'function' || typeof index === 'string') {
+    return { index : index.toString() };
+  }
+
+  if (index.index) {
+    r.index = index.index.toString();
+  }
+
   return r;
 }
 
@@ -60,12 +79,23 @@ function viewsEqual(a, b) {
   });
 }
 
+function indexEqual(a, b) {
+  return b && a.index === b.index;
+}
+
+function indexesEqual(a, b) {
+  return !objsome(a, function (v, k) {
+    return !indexEqual(v, b[k]);
+  });
+}
+
 function docEqual(local, remote) {
   if (!remote) {
     return false;
   }
 
   return viewsEqual(local.views, remote.views) &&
+         indexesEqual(local.indexes, remote.indexes) &&
          updatesEqual(local.updates, remote.updates);
 }
 
